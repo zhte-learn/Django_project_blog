@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from .constants import CHAR_MAX_LENGTH, SLUG_MAX_LENGTH, STR_DISPLAY_MAX_LENGTH
 from core.models import IsPublishedAbstract, CreatedAtAbstract
@@ -55,6 +56,7 @@ class Post(IsPublishedAbstract, CreatedAtAbstract):
     text = models.TextField("Текст")
     pub_date = models.DateTimeField(
         "Дата и время публикации",
+        default=timezone.now,
         help_text=(
             "Если установить дату и время в будущем "
             "— можно делать отложенные публикации."
@@ -81,6 +83,7 @@ class Post(IsPublishedAbstract, CreatedAtAbstract):
         verbose_name="Категория",
         related_name="posts",
     )
+    image = models.ImageField('Фото', upload_to='post_images', blank=True)
 
     class Meta:
         verbose_name = "публикация"
@@ -89,3 +92,22 @@ class Post(IsPublishedAbstract, CreatedAtAbstract):
 
     def __str__(self):
         return truncate_string(self.title, STR_DISPLAY_MAX_LENGTH)
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(
+        Post,
+        related_name='comments',
+        on_delete=models.CASCADE,
+        verbose_name="Публикация"
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Автор комментария"
+    )
+    text = models.TextField("Текст комментария")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']

@@ -150,3 +150,6 @@ static/
 media/
 
 sent_emails/
+
+**/migrations/*
+!**/migrations/__init__.py

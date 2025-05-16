@@ -10,7 +10,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-] 
+]
 
 INSTALLED_APPS = [
     'blog.apps.BlogConfig',
@@ -88,11 +88,20 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
+
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CSRF_FAILURE_VIEW = 'core.views.csrf_failure' 
-LOGIN_REDIRECT_URL = 'blog:index' 
+CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
+
+
+LOGIN_REDIRECT_URL = 'blog:index'
+LOGIN_URL = 'login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'

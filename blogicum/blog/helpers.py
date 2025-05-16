@@ -1,4 +1,5 @@
 from django.utils.timezone import now
+from django.core.paginator import Paginator
 
 
 def truncate_string(value, length):
@@ -11,3 +12,8 @@ def filter_posts(queryset):
         is_published=True,
         category__is_published=True,
     )
+
+
+def paginate_queryset(queryset, page_number, limit):
+    paginator = Paginator(queryset, limit)
+    return paginator.get_page(page_number)
