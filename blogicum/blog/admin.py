@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Category, Location, Post
+from .models import Category, Location, Post, Comment
 
 
 @admin.register(Category)
@@ -32,6 +32,17 @@ class PostAdmin(admin.ModelAdmin):
     )
     search_fields = ("title",)
     list_filter = ("category", "author",)
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = (
+        "post",
+        "author",
+        "created_at",
+    )
+    search_fields = ("author__username", "text")
+    list_filter = ("post", "author")
 
 
 admin.site.empty_value_display = 'Не задано'
