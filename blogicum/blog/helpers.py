@@ -1,5 +1,6 @@
 from django.utils.timezone import now
 from django.core.paginator import Paginator
+from django.db.models import Count
 
 
 def truncate_string(value, length):
@@ -7,11 +8,15 @@ def truncate_string(value, length):
 
 
 def filter_posts(queryset):
-    return queryset.select_related('location', 'author', 'category').filter(
+    return queryset.select_related("location", "author", "category").filter(
         pub_date__lte=now(),
         is_published=True,
         category__is_published=True,
     )
+
+
+def annotate_with_comments(queryset):
+    return queryset.annotate(comment_count=Count("comments")).order_by("-pub_date")
 
 
 def paginate_queryset(queryset, page_number, limit):

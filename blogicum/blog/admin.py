@@ -57,4 +57,4 @@ class CommentAdmin(admin.ModelAdmin):
     list_filter = ("post", "author")
 
 
-admin.site.empty_value_display = 'Не задано'
+admin.site.empty_value_display = "Не задано"
