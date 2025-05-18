@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 
 from .models import Category, Location, Post, Comment
 
@@ -29,9 +30,20 @@ class PostAdmin(admin.ModelAdmin):
         "author",
         "location",
         "category",
+        "image_preview",
     )
     search_fields = ("title",)
     list_filter = ("category", "author",)
+
+    def image_preview(self, obj):
+        """Метод для отображения изображения в админке, если оно есть."""
+        if obj.image:
+            return mark_safe(
+                f'<img src="{obj.image.url}" width="80" height="60" />'
+            )
+        return "Нет изображения"
+
+    image_preview.short_description = "Изображение"
 
 
 @admin.register(Comment)
