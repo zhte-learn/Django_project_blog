@@ -94,7 +94,7 @@ class Post(IsPublishedAbstract, CreatedAtAbstract):
         return truncate_string(self.title, STR_DISPLAY_MAX_LENGTH)
 
 
-class Comment(models.Model):
+class Comment(CreatedAtAbstract):
     post = models.ForeignKey(
         Post,
         related_name='comments',
@@ -104,10 +104,14 @@ class Comment(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        verbose_name="Автор комментария"
+        verbose_name="Автор комментария",
+        related_name="comments",
     )
     text = models.TextField("Текст комментария")
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        ordering = ['created_at']
+    class Meta(CreatedAtAbstract.Meta):
+        verbose_name = "Комментарий"
+        verbose_name_plural = "Комментарии"
+    
+    def __str__(self):
+        return truncate_string(self.post.title, STR_DISPLAY_MAX_LENGTH)

@@ -15,7 +15,7 @@ class IsPublishedAbstract(models.Model):
 
 
 class CreatedAtAbstract(models.Model):
-    """Абстрактная модель. Добавляет флаг created_at."""
+    """Абстрактная модель. Добавляет поле created_at."""
 
     created_at = models.DateTimeField(
         auto_now_add=True,
@@ -24,3 +24,4 @@ class CreatedAtAbstract(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ['created_at']
