@@ -112,6 +112,6 @@ class Comment(CreatedAtAbstract):
     class Meta(CreatedAtAbstract.Meta):
         verbose_name = "Комментарий"
         verbose_name_plural = "Комментарии"
-    
+
     def __str__(self):
         return truncate_string(self.post.title, STR_DISPLAY_MAX_LENGTH)

@@ -16,7 +16,9 @@ def filter_posts(queryset):
 
 
 def annotate_with_comments(queryset):
-    return queryset.annotate(comment_count=Count("comments")).order_by("-pub_date")
+    return queryset.annotate(
+        comment_count=Count("comments")
+    ).order_by("-pub_date")
 
 
 def paginate_queryset(queryset, page_number, limit):

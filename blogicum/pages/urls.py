@@ -1,5 +1,7 @@
 from django.urls import path
+
 from .views import AboutPageView, RulesPageView
+
 
 app_name = 'pages'
 

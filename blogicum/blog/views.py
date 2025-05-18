@@ -1,7 +1,6 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
 
 from .constants import POST_LIMIT
 from .models import Category, Post, Comment
@@ -15,7 +14,7 @@ from .helpers import (
 
 def index(request):
     posts = annotate_with_comments(filter_posts(Post.objects))
-    
+
     page = paginate_queryset(
         posts,
         request.GET.get("page"),
@@ -29,10 +28,12 @@ def post_detail(request, post_id):
         Post.objects.select_related("author", "location", "category"),
         id=post_id
     )
-    
+
     if post.author != request.user:
         post = get_object_or_404(
-            filter_posts(Post.objects.select_related("author", "location", "category")),
+            filter_posts(
+                Post.objects.select_related("author", "location", "category")
+            ),
             id=post_id
         )
 
@@ -75,7 +76,11 @@ def profile_view(request, username):
 
     if request.user == profile:
         posts = annotate_with_comments(
-            profile.posts.select_related("category", "location", "author").all()
+            profile.posts.select_related(
+                "category",
+                "location",
+                "author"
+            ).all()
         )
     else:
         posts = annotate_with_comments(
@@ -97,11 +102,11 @@ def profile_view(request, username):
 @login_required
 def edit_profile(request):
     form = ProfileForm(request.POST or None, instance=request.user)
-    
+
     if form.is_valid():
         form.save()
         return redirect("blog:profile", username=request.user.username)
-    
+
     return render(request, "blog/user.html", {"form": form})
 
 
@@ -114,7 +119,7 @@ def create_post(request):
         post.author = request.user
         post.save()
         return redirect("blog:profile", username=request.user.username)
-    
+
     return render(request, "blog/create.html", {"form": form})
 
 
@@ -125,8 +130,13 @@ def edit_post(request, post_id):
     if not request.user.is_authenticated or post.author != request.user:
         return redirect("blog:post_detail", post_id=post.id)
 
-    form = PostForm(request.POST or None, files=request.FILES or None, instance=post)
-    if form.is_valid(): 
+    form = PostForm(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=post
+    )
+
+    if form.is_valid():
         form.save()
         return redirect("blog:post_detail", post_id=post.id)
     return render(request, "blog/create.html", {"form": form})
