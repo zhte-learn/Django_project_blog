@@ -8,7 +8,7 @@ def truncate_string(value, length):
 
 
 def filter_posts(queryset):
-    return queryset.select_related("location", "author", "category").filter(
+    return queryset.filter(
         pub_date__lte=now(),
         is_published=True,
         category__is_published=True,
@@ -16,7 +16,10 @@ def filter_posts(queryset):
 
 
 def annotate_with_comments(queryset):
-    return queryset.annotate(
+    return queryset.select_related(
+        "location",
+        "author",
+        "category").annotate(
         comment_count=Count("comments")
     ).order_by("-pub_date")
 

@@ -74,18 +74,12 @@ def category_posts(request, category_slug):
 def profile_view(request, username):
     profile = get_object_or_404(User, username=username)
 
-    if request.user == profile:
-        posts = annotate_with_comments(
-            profile.posts.select_related(
-                "category",
-                "location",
-                "author"
-            ).all()
-        )
-    else:
-        posts = annotate_with_comments(
-            filter_posts(profile.posts.all())
-        )
+    posts = profile.posts.all()
+
+    if request.user != profile:
+        posts = filter_posts(posts)
+
+    posts = annotate_with_comments(posts)
 
     page = paginate_queryset(
         posts,
@@ -149,11 +143,11 @@ def delete_post(request, post_id):
     if request.user != post.author:
         return redirect("blog:post_detail", post_id=post.id)
 
-    # Я не могу сделать проверку на POST, потому что в
-    # шаблоне удаление происходит по ссылке GET.
-    # Если меняю шаблон, но pytest выдает много ошибок.
-    post.delete()
-    return redirect("blog:profile", username=post.author.username)
+    if request.method == "POST":
+        post.delete()
+        return redirect("blog:profile", username=post.author.username)
+
+    return render(request, "blog/create.html", {"post": post})
 
 
 @login_required

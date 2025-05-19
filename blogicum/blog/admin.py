@@ -39,7 +39,7 @@ class PostAdmin(admin.ModelAdmin):
         """Метод для отображения изображения в админке, если оно есть."""
         if obj.image:
             return mark_safe(
-                f'<img src="{obj.image.url}" width="80" height="60" />'
+                f"<img src='{obj.image.url}' width='80' height='60' />"
             )
         return "Нет изображения"
 
