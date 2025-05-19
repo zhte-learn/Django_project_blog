@@ -5,8 +5,6 @@ from django.urls import include, path, reverse_lazy
 from django.views.generic import CreateView
 from django.contrib.auth.forms import UserCreationForm
 
-from .views import UserRegisterView
-
 
 handler404 = "pages.views.page_not_found"
 handler500 = "pages.views.server_error"
