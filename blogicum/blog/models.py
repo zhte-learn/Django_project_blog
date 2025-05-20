@@ -114,4 +114,4 @@ class Comment(CreatedAtAbstract):
         verbose_name_plural = "Комментарии"
 
     def __str__(self):
-        return truncate_string(self.post.title, STR_DISPLAY_MAX_LENGTH)
+        return truncate_string(self.text, STR_DISPLAY_MAX_LENGTH)

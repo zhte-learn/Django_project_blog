@@ -74,12 +74,10 @@ def category_posts(request, category_slug):
 def profile_view(request, username):
     profile = get_object_or_404(User, username=username)
 
-    posts = profile.posts.all()
+    posts = annotate_with_comments(profile.posts.all())
 
     if request.user != profile:
         posts = filter_posts(posts)
-
-    posts = annotate_with_comments(posts)
 
     page = paginate_queryset(
         posts,
@@ -145,9 +143,11 @@ def delete_post(request, post_id):
 
     if request.method == "POST":
         post.delete()
-        return redirect("blog:profile", username=post.author.username)
+        return redirect("blog:profile", username=request.user)
 
-    return render(request, "blog/create.html", {"post": post})
+    form = PostForm(instance=post)
+
+    return render(request, "blog/create.html", {"form": form})
 
 
 @login_required

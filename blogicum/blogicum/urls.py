@@ -1,19 +1,13 @@
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import include, path, reverse_lazy
-from django.views.generic import CreateView
-from django.contrib.auth.forms import UserCreationForm
+from django.urls import include, path
+
+from pages.views import UserRegisterView
 
 
 handler404 = "pages.views.page_not_found"
 handler500 = "pages.views.server_error"
-
-
-class UserRegisterView(CreateView):
-    template_name = "registration/registration_form.html"
-    form_class = UserCreationForm
-    success_url = reverse_lazy("login")
 
 
 urlpatterns = [
