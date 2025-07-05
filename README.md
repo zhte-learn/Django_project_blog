@@ -1,6 +1,7 @@
 # Simple Django Blog
 
 This is a simple blog application built with Django. It provides core blogging features such as user registration, authentication, and the ability for users to create, view, and manage their own posts.
+
 This project was developed as part of the **"Python Backend Developer" course by Yandex Practicum**.
 ---
 
